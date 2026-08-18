@@ -1,0 +1,14 @@
+player,tier,move_id,latency,blocked,online,precrouch,nth,conocido
+ProA,pro,gen_db4,16,1,0,0,1,1
+ProA,pro,gen_db4,,0,0,0,2,1
+ProB,pro,gen_db4,19,1,0,0,1,1
+ProB,pro,gen_db4,14,1,0,0,3,1
+ProC,pro,gen_db4,21,1,0,0,1,1
+ProA,pro,gen_df3,18,1,0,0,1,1
+ProB,pro,gen_df3,,0,0,0,2,1
+ProC,pro,gen_df3,17,1,0,0,1,1
+MedioA,medio,gen_db4,22,1,0,0,1,1
+MedioA,medio,gen_df3,,0,0,0,1,1
+sujeto,sujeto,gen_db4,15,1,0,0,1,1
+sujeto,sujeto,gen_db4,18,1,0,0,2,1
+sujeto,sujeto,gen_df3,17,1,0,0,1,1
