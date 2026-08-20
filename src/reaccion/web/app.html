@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reaction Lab</title>
+<style>
+:root{
+  --bg:#f6f7f9; --panel:#fff; --linea:#e2e6ec; --texto:#12151a; --suave:#5d6673;
+  --tenue:#8b929d; --acento:#1f5fbf; --rojo:#b3261e; --verde:#1d7a45; --ambar:#9a6700;
+  --radio:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--texto);
+  font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.cab{background:var(--panel);border-bottom:1px solid var(--linea);padding:14px 24px;
+  display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10}
+.logo{width:30px;height:30px;border-radius:7px;background:var(--acento);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.cab h1{font-size:15px;margin:0;font-weight:650;letter-spacing:-.01em}
+.cab p{margin:0;font-size:12px;color:var(--tenue)}
+.wrap{max-width:1180px;margin:0 auto;padding:22px 24px 60px}
+.panel{background:var(--panel);border:1px solid var(--linea);border-radius:var(--radio);
+  margin-bottom:18px;overflow:hidden}
+.panel>header{padding:12px 18px;border-bottom:1px solid var(--linea);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.panel>header h2{font-size:13px;margin:0;font-weight:650;text-transform:uppercase;
+  letter-spacing:.05em;color:var(--suave)}
+.panel .cuerpo{padding:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+label{display:block;font-size:12px;color:var(--suave);margin-bottom:4px;font-weight:500}
+input,select,textarea{width:100%;padding:7px 9px;border:1px solid var(--linea);
+  border-radius:6px;font:inherit;background:#fff;color:var(--texto)}
+input:focus,select:focus,textarea:focus{outline:2px solid #cfe0f7;border-color:var(--acento)}
+input[type=number]{font-variant-numeric:tabular-nums}
+button{padding:7px 13px;border:1px solid var(--linea);background:#fff;border-radius:6px;
+  font:inherit;font-weight:500;cursor:pointer;color:var(--texto)}
+button:hover{background:#f2f4f7}
+button.pri{background:var(--acento);border-color:var(--acento);color:#fff}
+button.pri:hover{filter:brightness(1.08)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.fila{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.crece{flex:1}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:left;font-weight:600;color:var(--tenue);font-size:11px;
+  text-transform:uppercase;letter-spacing:.04em;padding:8px 6px;
+  border-bottom:1px solid var(--linea);white-space:nowrap;position:sticky;top:0;background:var(--panel)}
+tbody td{padding:4px 6px;border-bottom:1px solid #f0f2f5;vertical-align:middle}
+tbody tr:hover{background:#fafbfc}
+tbody input,tbody select{padding:5px 6px;font-size:12.5px}
+.tabla-scroll{max-height:430px;overflow:auto;border:1px solid var(--linea);border-radius:8px}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.mini{font-size:12px;color:var(--tenue)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;
+  font-size:11.5px;font-weight:600}
+.pill.ok{background:#e6f4ec;color:var(--verde)}
+.pill.no{background:#fdecea;color:var(--rojo)}
+.pill.neutro{background:#eef1f5;color:var(--suave)}
+.aviso{padding:10px 13px;border-radius:7px;font-size:12.5px;margin-bottom:12px}
+.aviso.err{background:#fdecea;color:var(--rojo);border-left:3px solid var(--rojo)}
+.aviso.info{background:#eef4ff;color:#1a4a99;border-left:3px solid var(--acento)}
+.aviso.warn{background:#fff8e6;color:var(--ambar);border-left:3px solid var(--ambar)}
+.hash{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;
+  word-break:break-all;background:#f2f4f7;padding:8px 10px;border-radius:6px;margin-top:8px}
+iframe{width:100%;border:1px solid var(--linea);border-radius:8px;background:#fff;height:760px}
+.vacio{padding:44px 20px;text-align:center;color:var(--tenue);font-size:13px}
+details summary{cursor:pointer;font-size:12.5px;color:var(--suave);padding:4px 0}
+.pie{text-align:center;font-size:11.5px;color:var(--tenue);padding:20px}
+.bx{width:auto;margin:0}
+</style>
+</head>
+<body>
+
+<div class="cab">
+  <div class="logo">RL</div>
+  <div class="crece">
+    <h1>Reaction Lab</h1>
+    <p>Análisis de reacciones a lows · límite físico y techo aritmético del 50/50</p>
+  </div>
+  <span id="estadoSello" class="pill neutro">Sin pre-registro</span>
+</div>
+
+<div class="wrap">
+
+  <div class="panel">
+    <header><h2>1 · Pre-registro de umbrales</h2>
+      <span class="crece"></span>
+      <span class="mini">Séllalos antes de mirar los datos</span>
+    </header>
+    <div class="cuerpo">
+      <div class="aviso info">Si eliges los umbrales después de ver los resultados, cualquiera puede
+        desmontar el análisis: elegiste el corte que confirmaba lo que ya creías. El sello lleva un
+        SHA-256 con fecha; publícalo antes de analizar.</div>
+      <div class="grid">
+        <div><label>Sujeto</label><input id="sujeto" placeholder="alias del jugador"></div>
+        <div><label>Autor / organización</label><input id="autor" placeholder="p. ej. Tekken España"></div>
+        <div><label>Límite humano (frames)</label><input id="limite_humano" type="number" value="21" step="1" min="1"></div>
+        <div><label>p máximo</label><input id="p_max" type="number" value="0.01" step="0.001" min="0"></div>
+        <div><label>Desv. típica mínima del margen</label><input id="margen_std_min" type="number" value="1" step="0.1" min="0"></div>
+        <div><label>Máx. bloqueos en último frame</label><input id="margen_ultimo_max" type="number" value="0.6" step="0.05" min="0" max="1"></div>
+        <div><label>Divergencia máx. lows/mids</label><input id="divergencia_max" type="number" value="0.25" step="0.05" min="0" max="1"></div>
+        <div><label>Salto máx. entre contextos</label><input id="delta_contexto_max" type="number" value="0.25" step="0.05" min="0" max="1"></div>
+        <div><label>Mín. muestras 50/50</label><input id="min_n_5050" type="number" value="8" step="1" min="1"></div>
+        <div><label>Mín. muestras margen</label><input id="min_n_margen" type="number" value="6" step="1" min="1"></div>
+        <div><label>Mín. muestras contexto</label><input id="min_n_contexto" type="number" value="12" step="1" min="1"></div>
+      </div>
+      <div class="fila" style="margin-top:14px">
+        <button class="pri" id="bSellar">Sellar y descargar</button>
+        <button id="bCargarSello">Cargar sello existente</button>
+        <button id="bQuitarSello">Quitar sello</button>
+        <input type="file" id="fSello" accept=".txt" style="display:none">
+      </div>
+      <div id="salidaSello"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <header><h2>2 · Muestras</h2>
+      <span class="crece"></span>
+      <span class="mini" id="contador">0 filas</span>
+    </header>
+    <div class="cuerpo">
+      <div class="fila" style="margin-bottom:12px">
+        <button id="bAdd">Añadir fila</button>
+        <button id="bDup">Duplicar última</button>
+        <button id="bImport">Importar CSV</button>
+        <button id="bExport">Exportar CSV</button>
+        <button id="bVaciar">Vaciar</button>
+        <span class="crece"></span>
+        <select id="perfilDemo" class="bx" style="width:auto">
+          <option value="humano">Ejemplo: jugador limpio</option>
+          <option value="script" selected>Ejemplo: auto-block</option>
+          <option value="selectivo">Ejemplo: cheat selectivo</option>
+        </select>
+        <button id="bDemo">Cargar</button>
+        <input type="file" id="fCsv" accept=".csv,.txt" style="display:none">
+      </div>
+      <div class="aviso info">Una fila por cada golpe lanzado, <b>lows y mids</b>. Rellena el contexto
+        en todas, no solo en las sospechosas: si solo anotas los momentos raros, encontrarás el patrón
+        que buscabas aunque no exista.</div>
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr>
+            <th style="width:34px">#</th><th style="width:104px">Situación</th><th>Move</th>
+            <th style="width:74px">Altura</th><th style="width:64px">Startup</th>
+            <th style="width:72px">Latencia</th><th style="width:66px">Agachado</th>
+            <th style="width:64px">Vida %</th><th style="width:60px">Ronda</th>
+            <th style="width:56px">Suyas</th><th style="width:56px">Rival</th>
+            <th style="width:64px">Seg.</th><th style="width:56px">Online</th><th style="width:30px"></th>
+          </tr></thead>
+          <tbody id="tb"></tbody>
+        </table>
+      </div>
+      <div id="vacio" class="vacio">No hay muestras. Añade filas, importa un CSV o carga un ejemplo.</div>
+      <details style="margin-top:10px"><summary>Qué significa cada columna</summary>
+        <div class="mini" style="padding:8px 0;line-height:1.7">
+          <b>Situación</b> — <i>true 50/50</i>: hay que adivinar (mismo stance, mismo arranque, ambas
+          opciones demasiado rápidas). <i>timing</i>: se puede reaccionar. Esta clasificación es tuya y
+          ahí está toda la responsabilidad del análisis.<br>
+          <b>Startup</b> — frame en que el move golpea. Sin esto no se puede medir el margen.<br>
+          <b>Latencia</b> — frames desde el <b>frame 1 de la animación</b> hasta el input de guardia baja.
+          Vacío si no se agachó. No adivines cuándo "se ve" el low: mide siempre desde el frame 1.<br>
+          <b>Agachado</b> — en un low es bloqueo correcto; en un mid, se comió el golpe.<br>
+          <b>Suyas / Rival</b> — rondas ganadas por cada lado <b>antes</b> de esta ronda.<br>
+          <b>Seg.</b> — reloj tal y como se ve en pantalla.
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="panel">
+    <header><h2>3 · Informe</h2>
+      <span class="crece"></span>
+      <label class="mini" style="display:flex;gap:5px;align-items:center;margin:0">
+        <input type="checkbox" id="soloOffline" class="bx" checked> solo offline</label>
+      <label class="mini" style="display:flex;gap:5px;align-items:center;margin:0">
+        <input type="checkbox" id="soloPrimera" class="bx"> solo 1ª vez del move</label>
+    </header>
+    <div class="cuerpo">
+      <div class="fila" style="margin-bottom:14px">
+        <button class="pri" id="bAnalizar">Analizar</button>
+        <button id="bDescargar" disabled>Descargar informe</button>
+      </div>
+      <div id="err"></div>
+      <div id="zonaInforme"><div class="vacio">El informe aparecerá aquí.</div></div>
+    </div>
+  </div>
+
+  <p class="pie">Mide desviaciones estadísticas y límites físicos. No inspecciona ninguna máquina
+    ni detecta software. No prueba por sí solo que nadie haya hecho trampas.</p>
+</div>
+
+<script>
+(function(){
+var COLS=["situacion","move_id","altura","startup","latency","agachado","vida_pct",
+          "ronda","rondas_propias","rondas_rival","seg_restantes","online"];
+var UMB=["limite_humano","p_max","margen_std_min","margen_ultimo_max","divergencia_max",
+         "delta_contexto_max","min_n_5050","min_n_margen","min_n_contexto"];
+var filas=[],sello=null,htmlInforme=null;
+function $(i){return document.getElementById(i)}
+function nueva(){return {situacion:"true5050",move_id:"",altura:"low",startup:"",latency:"",
+  agachado:"1",vida_pct:"",ronda:"",rondas_propias:"",rondas_rival:"",seg_restantes:"",online:"0"}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+function pinta(){
+  $("contador").textContent=filas.length+(filas.length===1?" fila":" filas");
+  $("vacio").style.display=filas.length?"none":"block";
+  var h="";
+  for(var i=0;i<filas.length;i++){
+    var r=filas[i];
+    h+='<tr><td class="mini num">'+(i+1)+'</td>'+
+      '<td><select data-i="'+i+'" data-k="situacion">'+
+        '<option value="true5050"'+(r.situacion==="true5050"?" selected":"")+'>true 50/50</option>'+
+        '<option value="timing"'+(r.situacion==="timing"?" selected":"")+'>timing</option></select></td>'+
+      '<td><input data-i="'+i+'" data-k="move_id" value="'+esc(r.move_id)+'" placeholder="hellsweep"></td>'+
+      '<td><select data-i="'+i+'" data-k="altura">'+
+        '<option value="low"'+(r.altura==="low"?" selected":"")+'>low</option>'+
+        '<option value="mid"'+(r.altura==="mid"?" selected":"")+'>mid</option></select></td>'+
+      '<td><input data-i="'+i+'" data-k="startup" type="number" value="'+esc(r.startup)+'"></td>'+
+      '<td><input data-i="'+i+'" data-k="latency" type="number" value="'+esc(r.latency)+'"></td>'+
+      '<td style="text-align:center"><input class="bx" data-i="'+i+'" data-k="agachado" type="checkbox"'+(r.agachado==="1"?" checked":"")+'></td>'+
+      '<td><input data-i="'+i+'" data-k="vida_pct" type="number" min="0" max="100" value="'+esc(r.vida_pct)+'"></td>'+
+      '<td><input data-i="'+i+'" data-k="ronda" type="number" min="1" value="'+esc(r.ronda)+'"></td>'+
+      '<td><input data-i="'+i+'" data-k="rondas_propias" type="number" min="0" value="'+esc(r.rondas_propias)+'"></td>'+
+      '<td><input data-i="'+i+'" data-k="rondas_rival" type="number" min="0" value="'+esc(r.rondas_rival)+'"></td>'+
+      '<td><input data-i="'+i+'" data-k="seg_restantes" type="number" min="0" value="'+esc(r.seg_restantes)+'"></td>'+
+      '<td style="text-align:center"><input class="bx" data-i="'+i+'" data-k="online" type="checkbox"'+(r.online==="1"?" checked":"")+'></td>'+
+      '<td><button data-del="'+i+'" title="Borrar" style="border:none;background:none;color:var(--tenue);padding:2px 5px">✕</button></td></tr>';
+  }
+  $("tb").innerHTML=h;
+}
+
+document.addEventListener("input",function(e){
+  var t=e.target,i=t.getAttribute("data-i");
+  if(i===null)return;
+  var k=t.getAttribute("data-k");
+  filas[+i][k]=(t.type==="checkbox")?(t.checked?"1":"0"):t.value;
+});
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-del]");
+  if(b){filas.splice(+b.getAttribute("data-del"),1);pinta()}
+});
+
+function aCSV(){
+  var out=COLS.join(",")+",precrouch,nth\n";
+  filas.forEach(function(r){
+    out+=COLS.map(function(c){return (r[c]||"").toString().replace(/,/g,"")}).join(",")+",0,1\n";
+  });
+  return out;
+}
+function deCSV(txt){
+  var lin=txt.replace(/\r/g,"").split("\n").filter(function(l){return l.trim()});
+  if(!lin.length)return [];
+  var cab=lin[0].split(",").map(function(s){return s.trim().toLowerCase()});
+  return lin.slice(1).map(function(l){
+    var v=l.split(","),r=nueva();
+    COLS.forEach(function(c){
+      var j=cab.indexOf(c);
+      if(j>=0&&v[j]!==undefined)r[c]=v[j].trim();
+    });
+    if(r.situacion.indexOf("5050")>=0||r.situacion.indexOf("mixup")>=0)r.situacion="true5050";
+    else if(r.situacion)r.situacion="timing";
+    r.agachado=(r.agachado==="1"||r.agachado==="true")?"1":"0";
+    r.online=(r.online==="1"||r.online==="true")?"1":"0";
+    return r;
+  });
+}
+function bajar(nombre,texto,tipo){
+  var u=URL.createObjectURL(new Blob([texto],{type:tipo||"text/plain"}));
+  var a=document.createElement("a");a.href=u;a.download=nombre;a.click();
+  setTimeout(function(){URL.revokeObjectURL(u)},1000);
+}
+function query(){
+  var p=["sujeto="+encodeURIComponent($("sujeto").value||"sujeto")];
+  UMB.forEach(function(k){p.push(k+"="+encodeURIComponent($(k).value))});
+  p.push("autor="+encodeURIComponent($("autor").value));
+  if($("soloOffline").checked)p.push("solo_offline=1");
+  if($("soloPrimera").checked)p.push("solo_primera=1");
+  return p.join("&");
+}
+function marcaSello(){
+  var e=$("estadoSello");
+  if(sello){e.className="pill ok";e.textContent="Pre-registro sellado"}
+  else{e.className="pill neutro";e.textContent="Sin pre-registro"}
+  UMB.forEach(function(k){$(k).disabled=!!sello});
+}
+function error(msg){
+  $("err").innerHTML=msg?'<div class="aviso err">'+esc(msg)+'</div>':"";
+}
+
+$("bAdd").onclick=function(){filas.push(nueva());pinta()};
+$("bDup").onclick=function(){
+  if(!filas.length){filas.push(nueva())}
+  else{var c=JSON.parse(JSON.stringify(filas[filas.length-1]));filas.push(c)}
+  pinta();
+};
+$("bVaciar").onclick=function(){if(filas.length&&confirm("¿Borrar todas las filas?")){filas=[];pinta()}};
+$("bImport").onclick=function(){$("fCsv").click()};
+$("fCsv").onchange=function(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){filas=deCSV(r.result);pinta();error("")};
+  r.readAsText(f);e.target.value="";
+};
+$("bExport").onclick=function(){
+  if(!filas.length){error("No hay filas que exportar.");return}
+  error("");bajar("muestras.csv",aCSV(),"text/csv");
+};
+$("bDemo").onclick=function(){
+  fetch("/api/demo?perfil="+$("perfilDemo").value).then(function(r){return r.text()})
+    .then(function(t){filas=deCSV(t);pinta();error("");
+      if(!$("sujeto").value)$("sujeto").value="kai";})
+    .catch(function(){error("No pude cargar el ejemplo.")});
+};
+
+$("bSellar").onclick=function(){
+  if(!$("sujeto").value.trim()){error("Pon el nombre del sujeto antes de sellar.");return}
+  error("");
+  fetch("/api/sellar?"+query()+"&notas=",{method:"POST"})
+    .then(function(r){return r.text()})
+    .then(function(doc){
+      sello=doc;marcaSello();
+      var h=(doc.match(/sha256=([0-9a-f]+)/)||[])[1]||"";
+      $("salidaSello").innerHTML='<div class="aviso info" style="margin-top:14px">'+
+        'Sellado. <b>Publica este hash ahora</b>, antes de analizar. El informe lo llevará impreso '+
+        'y cualquiera podrá recalcularlo.</div><div class="hash">'+esc(h)+'</div>';
+      bajar("preregistro.txt",doc);
+    }).catch(function(){error("No pude sellar.")});
+};
+$("bCargarSello").onclick=function(){$("fSello").click()};
+$("fSello").onchange=function(e){
+  var f=e.target.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    fetch("/api/verificar",{method:"POST",body:rd.result}).then(function(r){
+      if(!r.ok)return r.text().then(function(t){throw new Error(t)});
+      return r.text();
+    }).then(function(t){
+      sello=rd.result;marcaSello();
+      var p=t.split("\n");
+      $("sujeto").value=p[1]||$("sujeto").value;
+      $("salidaSello").innerHTML='<div class="aviso info" style="margin-top:14px">'+
+        'Sello válido, cargado. Los umbrales del sello mandan sobre los de esta pantalla.'+
+        '</div><div class="hash">'+esc(p[3]||"")+'</div>';
+      error("");
+    }).catch(function(ex){sello=null;marcaSello();error(String(ex.message||ex))});
+  };
+  rd.readAsText(f);e.target.value="";
+};
+$("bQuitarSello").onclick=function(){
+  sello=null;marcaSello();$("salidaSello").innerHTML="";
+};
+
+$("bAnalizar").onclick=function(){
+  if(!filas.length){error("No hay muestras que analizar.");return}
+  error("");
+  var b=$("bAnalizar");b.disabled=true;b.textContent="Analizando…";
+  var cuerpo=aCSV()+(sello?"\n--PREREGISTRO--\n"+sello:"");
+  fetch("/api/analizar?"+query(),{method:"POST",body:cuerpo})
+    .then(function(r){
+      if(!r.ok)return r.text().then(function(t){throw new Error(t)});
+      return r.text();
+    })
+    .then(function(html){
+      htmlInforme=html;
+      var u=URL.createObjectURL(new Blob([html],{type:"text/html"}));
+      $("zonaInforme").innerHTML='<iframe title="Informe" src="'+u+'"></iframe>';
+      $("bDescargar").disabled=false;
+      if(!sello){
+        $("err").innerHTML='<div class="aviso warn">Sin pre-registro: los umbrales se han '+
+          'elegido en esta pantalla. Para un informe publicable, sella primero.</div>';
+      }
+    })
+    .catch(function(ex){error(String(ex.message||ex))})
+    .then(function(){b.disabled=false;b.textContent="Analizar"});
+};
+$("bDescargar").onclick=function(){
+  if(htmlInforme)bajar("informe.html",htmlInforme,"text/html");
+};
+
+filas=[nueva(),nueva(),nueva()];
+pinta();marcaSello();
+})();
+</script>
+</body>
+</html>

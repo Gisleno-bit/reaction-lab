@@ -1,0 +1,8 @@
+situacion,move_id,altura,startup,latency,agachado,vida_pct,ronda,rondas_propias,rondas_rival,seg_restantes,online,precrouch,nth
+true5050,hellsweep,low,18,,0,82,1,0,0,54,0,0,1
+true5050,df2,mid,,,0,82,1,0,0,52,0,0,1
+true5050,hellsweep,low,18,16,1,61,1,0,0,38,0,0,2
+timing,db4,low,24,23,1,61,1,0,0,31,0,0,1
+timing,db4,low,24,,0,45,2,1,0,49,0,0,2
+true5050,d4,low,19,17,1,28,3,1,1,12,0,0,1
+true5050,uf4,mid,,,1,28,3,1,1,9,0,0,1

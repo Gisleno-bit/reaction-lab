@@ -1,0 +1,9 @@
+# Normaliza finales de linea: el repo guarda LF siempre.
+# Sin esto, un clon en Windows convierte a CRLF y el script de humo de la CI
+# (que usa sed sobre el pre-registro) puede comportarse distinto por plataforma.
+* text=auto eol=lf
+*.rs   text eol=lf
+*.toml text eol=lf
+*.yml  text eol=lf
+*.md   text eol=lf
+*.csv  text eol=lf

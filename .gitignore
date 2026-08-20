@@ -1,0 +1,12 @@
+/target
+**/*.rs.bk
+
+# Salidas de trabajo, no del repo.
+# OJO: Cargo.lock SI se versiona — esta es una crate binaria y el lock es
+# lo que garantiza que tu build y el de la CI sean identicos.
+preregistro.txt
+informe.txt
+informe.html
+datos.csv
+demo.csv
+plantilla.csv
